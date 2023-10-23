@@ -80,21 +80,21 @@ workflows:
           requires:
             - build   
 
-  cicd_workflow:
-    jobs:
-      - build:
-          filters:
-            branches:
-              only: release
-      # - test:
-      #     requires:
-      #       - build
-      - scan:
-          requires:
-            - build
-      - build-and-push:
-          requires:
-            - test
-      # - deploy:
-      #     requires:
-      #       - build-and-push
+  # cicd_workflow:
+  #   jobs:
+  #     - build:
+  #         filters:
+  #           branches:
+  #             only: release
+  #     - test:
+  #         requires:
+  #           - build
+  #     - scan:
+  #         requires:
+  #           - build
+  #     - build-and-push:
+  #         requires:
+  #           - test
+  #     - deploy:
+  #         requires:
+  #           - build-and-push
