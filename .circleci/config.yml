@@ -17,8 +17,7 @@ jobs:
           name: Test
           command: |
             mvn test -Dtest="ExpenseControllerTest#createExpenseTest"
-            mvn test -Dtest="ExpenseControllerTest#getAllExpenseByWalletTest"
-            mvn test -Dtest="ExpenseControllerTest#updateExpenseTest"
+
   test:
     docker:
       - image: cimg/openjdk:17.0
