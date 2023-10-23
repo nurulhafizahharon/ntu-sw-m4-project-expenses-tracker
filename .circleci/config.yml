@@ -16,7 +16,7 @@ jobs:
       - run:
           name: Test
           command: |
-            mvn test -Dtest="ExpenseControllerTest#createExpenseTest"
+            mvn test
 
   test:
     docker:
