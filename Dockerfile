@@ -1,19 +1,43 @@
-FROM maven:3.6.3 AS maven
+# Use the Eclipse Temurin base image with Java 17
+FROM eclipse-temurin:17-jdk-jammy
+# Set the working directory
+WORKDIR /ntu-sw-m3-project-expenses-tracker
+# Copy .mvn directory (if it exists)
+COPY .mvn .mvn
+# Copy the Maven Wrapper script, pom.xml, and source code
+COPY mvnw ./
+COPY pom.xml ./
+COPY src ./src
+COPY target/expenses-tracker-0.0.1-SNAPSHOT.jar expenses-tracker.jar
+EXPOSE 8080
 
-LABEL MAINTAINER=""
+ENTRYPOINT ["java","-jar","/expenses-tracker.jar"]
+# I added this as there are issues with ./mvnw's CRLF for windows, so I had to reformat it.
+RUN apt-get update && apt-get install -y dos2unix
+RUN dos2unix ./mvnw
+# Make the Maven Wrapper script executable
+RUN chmod +x ./mvnw
+# Build and install your application
+RUN ./mvnw install
+# Define the command to run the Spring Boot application
+CMD ["./mvnw", "spring-boot:run"]
 
-WORKDIR /usr/src/app
+# FROM maven:3.6.3 AS maven
 
-COPY . /usr/src/app/
+# LABEL MAINTAINER=""
 
-RUN mvn package
+# WORKDIR /usr/src/app
 
-FROM adoptopenjdk/openjdk11:alpine-jre
+# COPY . /usr/src/app/
 
-ARG JAR_FILE=spring-boot-api-tutorial.jar
+# RUN mvn package
 
-WORKDIR /opt/app
+# FROM adoptopenjdk/openjdk11:alpine-jre
 
-COPY --from=maven /usr/src/app/target/${JAR_FILE} /opt/app/
+# ARG JAR_FILE=spring-boot-api-tutorial.jar
 
-ENTRYPOINT ["java", "-jar", "spring-boot-api-tutorial.jar"]
+# WORKDIR /opt/app
+
+# COPY --from=maven /usr/src/app/target/${JAR_FILE} /opt/app/
+
+# ENTRYPOINT ["java", "-jar", "spring-boot-api-tutorial.jar"]
