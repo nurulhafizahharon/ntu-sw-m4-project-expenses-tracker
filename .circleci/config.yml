@@ -14,6 +14,19 @@ jobs:
       - run:
           name: Build
           command: mvn -B -DskipTests clean package
+
+  test:
+    docker:
+      - image: cimg/openjdk:17.0
+    steps:
+      - checkout
+      - run:
+          name: Test
+          command: |
+            mvn test -Dtest="ExpenseControllerTest#createExpenseTest"
+            mvn test -Dtest="ExpenseControllerTest#getAllExpenseByWalletTest"
+            mvn test -Dtest="ExpenseControllerTest#updateExpenseTest"
+            
   build-and-push:
     executor: docker/docker
     steps:
@@ -39,17 +52,7 @@ jobs:
       - snyk/scan:
           docker-image-name: $IMAGE_NAME
 
-  # test:
-  #   docker:
-  #     - image: cimg/openjdk:17.0
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: Test
-  #         command: |
-  #           mvn test -Dtest="ExpenseControllerTest#createExpenseTest"
-  #           mvn test -Dtest="ExpenseControllerTest#getAllExpenseByWalletTest"
-  #           mvn test -Dtest="ExpenseControllerTest#updateExpenseTest"
+
   # deploy:
   #   docker:
   #     - image: cimg/openjdk:17.0
@@ -73,6 +76,9 @@ workflows:
           filters:
             branches:
               only: develop
+      - test:
+          requires:
+            - build
       - scan:
           requires:
             - build
