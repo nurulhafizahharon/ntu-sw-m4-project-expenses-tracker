@@ -13,6 +13,12 @@ jobs:
       - run:
           name: Build
           command: mvn -B -DskipTests clean package
+      - run:
+          name: Test
+          command: |
+            mvn test -Dtest="ExpenseControllerTest#createExpenseTest"
+            mvn test -Dtest="ExpenseControllerTest#getAllExpenseByWalletTest"
+            mvn test -Dtest="ExpenseControllerTest#updateExpenseTest"
   test:
     docker:
       - image: cimg/openjdk:17.0
@@ -32,9 +38,9 @@ workflow:
           filters:
             branches:
               only: develop
-      - test:
-          # requires:
-          #   - build
-          filters:
-            branches:
-              only: develop
+      # - test:
+      #     # requires:
+      #     #   - build
+      #     filters:
+      #       branches:
+      #         only: develop
