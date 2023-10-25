@@ -13,9 +13,9 @@ jobs:
       - checkout
       - run:
           name: Build
-          command: |
-            mvn -B -DskipTests clean package
+          command: 
             mvn clean spring-boot:run
+            # mvn -B -DskipTests clean package
 
   test:
     docker:
