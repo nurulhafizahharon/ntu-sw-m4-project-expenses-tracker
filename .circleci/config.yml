@@ -23,7 +23,6 @@ jobs:
       - run:
           name: Test
           command: |
-            mvn clean spring-boot:run
             mvn test -Dtest="ExpenseControllerTest#createExpenseTest"
             mvn test -Dtest="ExpenseControllerTest#getAllExpenseByWalletTest"
             mvn test -Dtest="ExpenseControllerTest#updateExpenseTest"
@@ -77,15 +76,16 @@ workflows:
           filters:
             branches:
               only: develop
-      - test:
+      - build-and-push:
           requires:
             - build
+      - test:
+          requires:
+            - build-and-push
       - scan:
           requires:
             - build
-      - build-and-push:
-          requires:
-            - build   
+         
 
   # cicd_workflow:
   #   jobs:
