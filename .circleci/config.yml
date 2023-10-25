@@ -14,7 +14,6 @@ jobs:
       - run:
           name: Build
           command: 
-            mvn clean spring-boot:run
             # mvn -B -DskipTests clean package
 
   test:
@@ -25,6 +24,7 @@ jobs:
       - run:
           name: Test
           command: |
+            mvn clean spring-boot:run
             mvn test -Dtest="ExpenseControllerTest#createExpenseTest"
             mvn test -Dtest="ExpenseControllerTest#getAllExpenseByWalletTest"
             mvn test -Dtest="ExpenseControllerTest#updateExpenseTest"
