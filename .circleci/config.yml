@@ -29,6 +29,8 @@ jobs:
             
   build-and-push:
     executor: docker/docker
+    environment:
+      IMAGE_NAME: norulehapizah/project-space
     steps:
       - setup_remote_docker
       - checkout
@@ -39,6 +41,7 @@ jobs:
       - docker/push:
           image: norulehapizah/project-space
           tag: v1.0.0
+      - run: docker build -t $IMAGE_NAME .
 
   scan:
     docker:
