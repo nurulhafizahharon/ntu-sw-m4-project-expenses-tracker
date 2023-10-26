@@ -86,7 +86,7 @@ workflows:
               only: develop
       - test:
           requires:
-            - bbuild
+            - build
       - build-and-push:
           requires:
             - test
