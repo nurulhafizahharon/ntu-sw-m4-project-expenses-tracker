@@ -3,7 +3,7 @@ version: 2.1
 orbs: # packages
   docker: circleci/docker@2.1.4 # allows us to use docker orb's commands
   snyk: snyk/snyk@1.5.0 # 3rd party orb of snyk
-  # heroku: circleci/heroku@2.0.0
+  heroku: circleci/heroku@2.0.0
 
 jobs:
   build:
@@ -61,21 +61,21 @@ jobs:
           docker-image-name: $IMAGE_NAME
           severity-threshold: high
 
-  # deploy:
-  #   docker:
-  #     - image: cimg/openjdk:17.0
-  #   steps:
-  #     - setup_remote_docker
-  #     - heroku/install #installs heroku cli for our run command
-  #     - checkout
-  #     - run:
-  #         name: Heroku Container Push # the name of the group of commands we are running
-  #         command: |
-  #           heroku container:login
-  #           heroku container:push web -a nurulhafizah-su-devops # Need to change once confirm to deploy
-  #           heroku container:release web -a nurulhafizah-su-devops # Need to change once confirm to deploy
-  #       # The push command pushes the image to heroku's container registry
-  #       # The release command deploys the image from heroku's container registry
+  deploy:
+    docker:
+      - image: cimg/openjdk:17.0
+    steps:
+      - setup_remote_docker
+      - heroku/install #installs heroku cli for our run command
+      - checkout
+      - run:
+          name: Heroku Container Push # the name of the group of commands we are running
+          command: |
+            heroku container:login
+            heroku container:push web -a nurulhafizah-su-devops # Need to change once confirm to deploy
+            heroku container:release web -a nurulhafizah-su-devops # Need to change once confirm to deploy
+        # The push command pushes the image to heroku's container registry
+        # The release command deploys the image from heroku's container registry
 
 workflows:
   ci_workflow:
@@ -84,32 +84,32 @@ workflows:
           filters:
             branches:
               only: develop
-      - build-and-push:
-          requires:
-            - build
       - test:
           requires:
-            - build-and-push
+            - bbuild
+      - build-and-push:
+          requires:
+            - test
       - scan:
           requires:
             - build
          
 
-  # cicd_workflow:
-  #   jobs:
-  #     - build:
-  #         filters:
-  #           branches:
-  #             only: release
-  #     - test:
-  #         requires:
-  #           - build
-  #     - scan:
-  #         requires:
-  #           - build
-  #     - build-and-push:
-  #         requires:
-  #           - test
-  #     - deploy:
-  #         requires:
-  #           - build-and-push
+  cicd_workflow:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: release
+      - test:
+          requires:
+            - build
+      - scan:
+          requires:
+            - build
+      - build-and-push:
+          requires:
+            - test
+      - deploy:
+          requires:
+            - build-and-push
