@@ -59,7 +59,6 @@ jobs:
       - run: docker build -t $IMAGE_NAME .
       - snyk/scan: 
           docker-image-name: $IMAGE_NAME
-          severity-threshold: high
 
   deploy:
     docker:
